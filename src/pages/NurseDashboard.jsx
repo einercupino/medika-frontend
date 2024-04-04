@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auths/AuthContext';
 
 export const GET_USERS = gql`
   query GetUsers {
@@ -19,6 +20,7 @@ const NurseDashboard = () => {
     const { loading, error, data } = useQuery(GET_USERS);
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+    const { logout } = useAuth();
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
@@ -38,6 +40,11 @@ const NurseDashboard = () => {
         console.log('Deleting user', userId);
     };
 
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
     const handleViewVitalSign = (userId, userName) => {
         // Navigate to view vital sign page, get patientId and name
         navigate(`/nurse/vital-signs/${userId}`, { state: { name: userName } });
@@ -47,6 +54,7 @@ const NurseDashboard = () => {
   return (
     <div className="px-4 py-6">
     <div className="mb-4">
+    <button onClick={handleLogout}>Logout</button>
         <input
             type="text"
             placeholder="Search by username"
