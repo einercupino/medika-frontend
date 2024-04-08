@@ -7,7 +7,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 
 const client = new ApolloClient({
   // TODO => change the uri to the production uri
-  uri: 'http://localhost:3500/graphql',
+  uri: import.meta.env.VITE_API_URL + '/graphql',
   cache: new InMemoryCache(),
   credentials: "include", // tells apollo to send cookies with every request
 })

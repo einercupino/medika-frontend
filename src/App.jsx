@@ -3,12 +3,10 @@ import Homepage from "./pages/Homepage"
 import Login from "./pages/Login"
 import PatientRegister from "./pages/PatientRegister"
 import PatientDashboard from "./pages/PatientDashboard"
-import PatientGame from "./pages/PatientGame"
 import PatientChecklist from "./pages/PatientAssessment"
 import NurseRegister from "./pages/NurseRegister"
 import NurseDashboard from "./pages/NurseDashboard"
 import NurseVitalSigns from "./pages/NurseVitalSigns"
-import NurseDiagnose from "./pages/NurseDiagnose"
 import NurseRoute from "./auths/NurseRoute"
 import PatientRoute from "./auths/PatientRoute"
 import { AuthProvider } from "./auths/AuthContext"
@@ -29,14 +27,6 @@ function App() {
         element={
           <PatientRoute>
             <PatientDashboard />
-          </PatientRoute>
-        }
-      />
-      <Route
-        path="/patient/game/:patientId"
-        element={
-          <PatientRoute>
-            <PatientGame />
           </PatientRoute>
         }
       />
@@ -62,14 +52,6 @@ function App() {
         element={
           <NurseRoute>
             <NurseVitalSigns />
-          </NurseRoute>
-        }
-      />
-      <Route
-        path="/nurse/vital-signs/diagnose/:vitalSignId"
-        element={
-          <NurseRoute>
-            <NurseDiagnose />
           </NurseRoute>
         }
       />

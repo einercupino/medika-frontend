@@ -6,10 +6,13 @@ import { GET_USER_BY_EMAIL } from '../graphql/queries/user.query';
 import { useAuth } from '../auths/AuthContext';
 
 const Login = () => {
+    const medikaLogo = '/medika.png'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+
+    console.log("ENV: " + JSON.stringify(import.meta.env.VITE_API_URL))
 
     const [loginUser, { loading: loadingLogin, error: errorLogin }] = useMutation(LOGIN_USER);
     const [getUserByEmail, { loading: loadingUser, data: userData, error: errorUser }] = useLazyQuery(GET_USER_BY_EMAIL, {
@@ -48,7 +51,12 @@ const Login = () => {
     if (errorUser) errorMessage = errorUser.message;
 
     return (
+        
         <form onSubmit={handleLogin} className="max-w-sm mx-auto bg-white shadow-lg rounded-lg p-8 mt-10">
+            {/* Logo and Title */}
+      <div className="flex flex-col items-center mb-8">
+        <img src={medikaLogo} alt="Medika Logo" className="w-58 h-48" />
+      </div>
             <h2 className="text-2xl font-bold mb-6 text-center">Medika Login</h2>
         
         <div className="mb-4">
