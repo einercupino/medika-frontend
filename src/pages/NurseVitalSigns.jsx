@@ -31,6 +31,7 @@ const ADD_VITAL_SIGN = gql`
 `;
 
 function NurseVitalSigns() {
+  const medikaLogo = '/medika.png'
   const location = useLocation();
   const { patientId } = useParams();
   const patientName = location.state?.name;
@@ -107,54 +108,66 @@ function NurseVitalSigns() {
   };
 
   return (
-    <div className="px-4 py-5 sm:px-6">
-      <h3 className="text-lg leading-6 font-medium text-gray-900">Vital Signs of {patientName}</h3>
+    <div className="min-h-screen bg-gray-100">
+  {/* Logo and Title */}
+  <div className="text-center py-6">
+    <img src={medikaLogo} alt="Medika Logo" className="mx-auto w-34 h-24" />
+    <h3 className="text-xl leading-6 font-medium text-gray-900 mt-2">
+      Vital Signs of {patientName}
+    </h3>
+  </div>
 
-{/* Add Vital Sign Form */}
-<div className="mb-4">
-        <form onSubmit={handleAddVitalSign} className="flex flex-col gap-4 mb-4">
-          <input
-            type="number"
-            placeholder="Body Temperature (°F)"
-            value={bodyTemperature}
-            onChange={(e) => setBodyTemperature(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Heart Rate (bpm)"
-            value={heartRate}
-            onChange={(e) => setHeartRate(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Blood Pressure (mmHg)"
-            value={bloodPressure}
-            onChange={(e) => setBloodPressure(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:bg-blue-300"
-            disabled={adding}
-          >
-            Add Vital Sign
-          </button>
-          {adding && <p>Adding vital sign...</p>}
-          {addingError && <p>Error adding vital sign: {addingError.message}</p>}
-        </form>
+  {/* Add Vital Sign Form */}
+  <div className="max-w-2xl mx-auto px-6">
+    <form onSubmit={handleAddVitalSign} className="bg-white shadow rounded-lg p-6 mb-6">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <input
+          type="number"
+          placeholder="Body Temperature (°F)"
+          value={bodyTemperature}
+          onChange={(e) => setBodyTemperature(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+        <input
+          type="number"
+          placeholder="Heart Rate (bpm)"
+          value={heartRate}
+          onChange={(e) => setHeartRate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Blood Pressure (mmHg)"
+          value={bloodPressure}
+          onChange={(e) => setBloodPressure(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
       </div>
+      <div className="flex justify-center mt-4">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 disabled:bg-blue-300"
+          disabled={adding}
+        >
+          Add Vital Sign
+        </button>
+      </div>
+      {adding && <p className="text-center mt-2">Adding vital sign...</p>}
+      {addingError && <p className="text-center text-red-500 mt-2">Error adding vital sign: {addingError.message}</p>}
+    </form>
+  </div>
 
-      <div className="mt-4">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+  {/* Vital Signs Table */}
+  <div className="max-w-6xl mx-auto px-6 mb-6">
+    <div className="bg-white shadow overflow-hidden rounded-lg">
+      <table className="min-w-full divide-y divide-gray-200">
+        {/* Table Head */}
+        <thead className="bg-gray-50">
+          <tr>
+          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -169,30 +182,25 @@ function NurseVitalSigns() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Date Recorded
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {vitalSigns.map((sign) => (
-                <tr key={sign.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{sign.id}</td>
+          </tr>
+        </thead>
+        {/* Table Body */}
+        <tbody className="bg-white divide-y divide-gray-200">
+          {vitalSigns.map((sign) => (
+            <tr key={sign.id} className="hover:bg-gray-50">
+              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{sign.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sign.bodyTemperature} °F</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sign.heartRate} bpm</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sign.bloodPressure} mmHg</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{sign.dateRecorded}</td>
-                  <td onClick={() => handleDiagnose(sign.id)} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <button className="text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ml-2 px-3 py-1 rounded-md">
-                        Diagnose</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
+  </div>
+</div>
+
   );
 }
 

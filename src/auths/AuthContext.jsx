@@ -17,6 +17,16 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('role');
     };
 
+    // Now, every time the app loads, this effect will run and set the auth state from local storage
+    React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        const role = localStorage.getItem('role');
+
+        if (token && role) {
+            setAuthState({ token, role });
+        }
+    }, []);
+
     return (
         <AuthContext.Provider value={{ ...authState, login, logout }}>
             {children}

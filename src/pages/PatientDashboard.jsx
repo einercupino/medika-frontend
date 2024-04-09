@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auths/AuthContext'
 
 const PatientDashboard = () => {
+  const medikaLogo = '/medika.png'
   const { patientId } = useParams();
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -44,10 +45,6 @@ const PatientDashboard = () => {
 
   const vitalSigns = data?.vitalSignsByPatient || [];
   const user = userData?.user;
-
-  const handleGame = (patientId) => {
-    navigate(`/patient/game/${patientId}`)
-  }
 
   const handleAssessment = (patientId) => {
     navigate(`/patient/checklist/${patientId}`)
@@ -101,58 +98,68 @@ const PatientDashboard = () => {
 
   return (
     <>
-      <div className="px-4 py-5 sm:px-6">
-      <h3 className="text-lg leading-6 font-medium text-gray-900">Vital Signs of {user?.name || 'Patient'}</h3>
-      <button onClick={handleLogout}>Logout</button>
-      <button onClick={() => handleGame(patientId)} className="text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 px-3 py-1 rounded-md">
-                                Game
-     </button>
-     <button onClick={() => handleAssessment(patientId)} className="text-white bg-blue-500 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 px-3 py-1 rounded-md">
-                                COVID Checklist
-     </button>
-      {/* Add Vital Sign Form */}
-<div className="mb-4">
-        
-        <form onSubmit={handleAddVitalSign} className="flex flex-col gap-4 mb-4">
-          <input
-            type="number"
-            placeholder="Body Temperature (°F)"
-            value={bodyTemperature}
-            onChange={(e) => setBodyTemperature(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Heart Rate (bpm)"
-            value={heartRate}
-            onChange={(e) => setHeartRate(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Blood Pressure (mmHg)"
-            value={bloodPressure}
-            onChange={(e) => setBloodPressure(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:bg-blue-300"
-            disabled={adding}
-          >
-            Add Vital Sign
-          </button>
-          {adding && <p>Adding vital sign...</p>}
-          {addingError && <p>Error adding vital sign: {addingError.message}</p>}
-        </form>
-      </div>
+      <div className="min-h-screen bg-gray-100 p-4">
+  {/* Top Section */}
+  <div className="flex justify-between items-start mb-6">
+    {/* Logo Section */}
+    <div className="w-1/4">
+      <img src={medikaLogo} alt="Logo" className="w-50 h-48" />
+    </div>
 
-      <div className="mt-4">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+    {/* Add Vital Signs Form */}
+    <div className="flex-grow ml-4">
+      <form onSubmit={handleAddVitalSign} className="space-y-4">
+        <input
+          type="number"
+          placeholder="Body Temperature (°F)"
+          value={bodyTemperature}
+          onChange={(e) => setBodyTemperature(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+        <input
+          type="number"
+          placeholder="Heart Rate (bpm)"
+          value={heartRate}
+          onChange={(e) => setHeartRate(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Blood Pressure (mmHg)"
+          value={bloodPressure}
+          onChange={(e) => setBloodPressure(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          required
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 w-full"
+          disabled={adding}
+        >
+          Add Vital Sign
+        </button>
+      </form>
+    </div>
+  </div>
+  {/* Middle Section */}
+<div className="flex justify-between items-center mb-6">
+  <h3 className="text-lg leading-6 font-medium text-gray-900">Vital Signs of {user?.name || 'Patient'}</h3>
+  <div className="flex items-center gap-4">
+    <button onClick={() => handleAssessment(patientId)} className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md">
+      COVID Checklist
+    </button>
+    <button onClick={handleLogout} className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-md">
+      Logout
+    </button>
+  </div>
+</div>
+
+
+  {/* Table Section */}
+  <div className="mb-6">
+  <table className="min-w-full divide-y divide-gray-200 shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -185,9 +192,10 @@ const PatientDashboard = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-    </div>
+  </div>
+
+</div>
+
     </>
   )
 }
