@@ -9,23 +9,72 @@ import NurseRegister from "./pages/NurseRegister"
 import NurseDashboard from "./pages/NurseDashboard"
 import NurseVitalSigns from "./pages/NurseVitalSigns"
 import NurseDiagnose from "./pages/NurseDiagnose"
+import NurseRoute from "./auths/NurseRoute"
+import PatientRoute from "./auths/PatientRoute"
+import { AuthProvider } from "./auths/AuthContext"
 
 function App() {
 
   return (
     <>
+    <AuthProvider>
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/patient/register" element={<PatientRegister />} />
-        <Route path="/patient/dashboard/:patientId" element={<PatientDashboard />} />
-        <Route path="/patient/game/:patientId" element={<PatientGame />} />
-        <Route path="/patient/checklist/:patientId" element={<PatientChecklist />} />
         <Route path="/nurse/register" element={<NurseRegister />} />
-        <Route path="/nurse/dashboard/:nurseId" element={<NurseDashboard />} />
-        <Route path="/nurse/vital-signs/:patientId" element={<NurseVitalSigns />} />
-        <Route path="/nurse/vital-signs/diagnose/:vitalSignId" element={<NurseDiagnose />} />
+
+        <Route
+        path="/patient/dashboard/:patientId"
+        element={
+          <PatientRoute>
+            <PatientDashboard />
+          </PatientRoute>
+        }
+      />
+      <Route
+        path="/patient/game/:patientId"
+        element={
+          <PatientRoute>
+            <PatientGame />
+          </PatientRoute>
+        }
+      />
+      <Route
+        path="/patient/checklist/:patientId"
+        element={
+          <PatientRoute>
+            <PatientChecklist />
+          </PatientRoute>
+        }
+      />
+
+        <Route
+        path="/nurse/dashboard/:nurseId"
+        element={
+          <NurseRoute>
+            <NurseDashboard />
+          </NurseRoute>
+        }
+      />
+      <Route
+        path="/nurse/vital-signs/:patientId"
+        element={
+          <NurseRoute>
+            <NurseVitalSigns />
+          </NurseRoute>
+        }
+      />
+      <Route
+        path="/nurse/vital-signs/diagnose/:vitalSignId"
+        element={
+          <NurseRoute>
+            <NurseDiagnose />
+          </NurseRoute>
+        }
+      />
       </Routes>
+      </AuthProvider>
     </>
   )
 }
