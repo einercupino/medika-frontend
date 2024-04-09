@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useLazyQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { LOGIN_USER } from '../graphql/mutations/user.mutation';
 import { GET_USER_BY_EMAIL } from '../graphql/queries/user.query'; 
+import { useAuth } from '../auths/AuthContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
+
     const [loginUser, { loading: loadingLogin, error: errorLogin }] = useMutation(LOGIN_USER);
-    const { loading: loadingUser, error: errorUser, data: userData } = useQuery(GET_USER_BY_EMAIL, {
+    const [getUserByEmail, { loading: loadingUser, data: userData, error: errorUser }] = useLazyQuery(GET_USER_BY_EMAIL, {
         variables: { email },
-        skip: !email, // Skip this query until we have the email after login
+        fetchPolicy: 'network-only'  // This ensures the query is made to the server
     });
 
     const handleLogin = async (e) => {
@@ -19,22 +22,25 @@ const Login = () => {
 
         try {
             const { data: loginData } = await loginUser({ variables: { email, password } });
-            console.log(loginData);  // You should get the token here
-            
-            // If login is successful, userData will now be populated with the user's information
-            if (!loadingUser && userData && userData.userByEmail) {
-                // Redirect based on the user's role
-                if (userData.userByEmail.role === 'nurse') {
-                    navigate(`/nurse/dashboard/${userData.userByEmail.id}`);
-                } else if (userData.userByEmail.role === 'patient') {
-                    navigate(`/patient/dashboard/${userData.userByEmail.id}`);
-                }
+            if (loginData && loginData.loginUser) {
+                const token = loginData.loginUser;
+                // Now we call the function returned by useLazyQuery to execute the query
+                getUserByEmail();
             }
         } catch (error) {
             console.error('Login error:', error.message);
             // Handle login error (e.g., show an error message)
         }
     };
+
+    // After getting the user data, we perform the role-based redirect
+    React.useEffect(() => {
+        if (userData && userData.userByEmail) {
+            const { id, role } = userData.userByEmail;
+            login(id, role); // Save the user ID and role to the auth context
+            navigate(`/${role}/dashboard/${id}`);
+        }
+    }, [userData, navigate, login]);
 
     // Display error messages if any
     let errorMessage = '';

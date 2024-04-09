@@ -5,10 +5,13 @@ import { GET_VITAL_SIGNS_BY_PATIENT } from '../graphql/queries/vitalsign.query'
 import { ADD_VITAL_SIGN } from '../graphql/mutations/vitalsign.mutation'
 import { GET_USER } from '../graphql/queries/user.query'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../auths/AuthContext'
 
 const PatientDashboard = () => {
   const { patientId } = useParams();
   const navigate = useNavigate();
+  const { logout } = useAuth();
+  
 
   // Apollo query
   const { loading, error, data } = useQuery(GET_VITAL_SIGNS_BY_PATIENT, {
@@ -49,6 +52,11 @@ const PatientDashboard = () => {
   const handleAssessment = (patientId) => {
     navigate(`/patient/checklist/${patientId}`)
   }
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+};
 
 
   // Handler for adding a new vital sign
@@ -95,6 +103,7 @@ const PatientDashboard = () => {
     <>
       <div className="px-4 py-5 sm:px-6">
       <h3 className="text-lg leading-6 font-medium text-gray-900">Vital Signs of {user?.name || 'Patient'}</h3>
+      <button onClick={handleLogout}>Logout</button>
       <button onClick={() => handleGame(patientId)} className="text-white bg-red-500 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 px-3 py-1 rounded-md">
                                 Game
      </button>
@@ -103,6 +112,7 @@ const PatientDashboard = () => {
      </button>
       {/* Add Vital Sign Form */}
 <div className="mb-4">
+        
         <form onSubmit={handleAddVitalSign} className="flex flex-col gap-4 mb-4">
           <input
             type="number"
