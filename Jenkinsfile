@@ -56,7 +56,7 @@ pipeline {
             steps {
                 script {
                     // Build Docker image and tag it
-                    bat 'docker build -t jjtan1996/medika-app:%BUILD_NUMBER% .'
+                    bat 'docker build -t jjtan1996/medika-app:%BUILD_NUMBER%'
                 }
             }
         }
