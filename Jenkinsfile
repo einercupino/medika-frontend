@@ -52,22 +52,12 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build and Push') {
             steps {
                 script {
-                    // Build Docker image and tag it
-                    bat 'docker build -t jjtan1996/medika-app:%BUILD_NUMBER%'
-                }
-            }
-        }
-
-        stage('Docker Push') {
-            steps {
-                script {
-                    // Push Docker image to Docker Hub
-                    docker.withRegistry('', 'github_credentials') {
-                        docker.image("jjtan1996/medika-app:%BUILD_NUMBER%").push()
-                    }
+                    def buildNumber = BUILD_NUMBER // Use Groovy's variable assignment
+                    bat "docker build -t jjtan1996/medika-app:${buildNumber} ."
+                    bat "docker push jjtan1996/medika-app:${buildNumber}"
                 }
             }
         }
