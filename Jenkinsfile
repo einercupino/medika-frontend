@@ -52,40 +52,78 @@ pipeline {
             }
         }
 
-        // Deployment Stages
+        // Deployment Stages (CD)
+        stage('Deliver Artifact') {
+            steps {
+                script {
+                    // For a Node.js project, this might mean creating a production-ready build
+                    bat 'npm run build'
+
+                    // Next, package your build directory (e.g., 'dist') as a tarball or similar
+                    bat 'tar -cvf medika-app.tar dist/'
+
+                    // Archive the artifact on jenkins
+                    archiveArtifacts artifacts: 'medika-app.tar', onlyIfSuccessful: true
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    // Build Docker image and tag it
+                    bat 'docker build -t jjtan1996/medika-app:%BUILD_NUMBER% .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                    // Push Docker image to Docker Hub
+                    docker.withRegistry('', 'github_credentials') {
+                        docker.image("jjtan1996/medika-app:%BUILD_NUMBER%").push()
+                    }
+                }
+            }
+        }
+
+
+        
+
         stage('Deploy to Dev Env') {
             steps {
                 echo 'Deploying to Development Environment...'
-                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker pull jjtan1996/medika-app:%BUILD_NUMBER%'
                 bat 'docker rm -f medika-dev || true'
-                bat 'docker run -d --name medika-dev -p 8080:80 jjtan1996/medika-app:latest'
+                bat 'docker run -d --name medika-dev -p 8080:80 jjtan1996/medika-app:%BUILD_NUMBER%'
             }
         }
 
         stage('Deploy to QAT Env') {
             steps {
                 echo 'Deploying to QAT Environment...'
-                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker pull jjtan1996/medika-app:%BUILD_NUMBER%'
                 bat 'docker rm -f medika-qat || true'
-                bat 'docker run -d --name medika-qat -p 8081:80 jjtan1996/medika-app:latest'
+                bat 'docker run -d --name medika-qat -p 8081:80 jjtan1996/medika-app:%BUILD_NUMBER%'
             }
         }
 
         stage('Deploy to Staging Env') {
             steps {
                 echo 'Deploying to Staging Environment...'
-                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker pull jjtan1996/medika-app:%BUILD_NUMBER%'
                 bat 'docker rm -f medika-staging || true'
-                bat 'docker run -d --name medika-staging -p 8082:80 jjtan1996/medika-app:latest'
+                bat 'docker run -d --name medika-staging -p 8082:80 jjtan1996/medika-app:%BUILD_NUMBER%'
             }
         }
 
         stage('Deploy to Production Env') {
             steps {
                 echo 'Deploying to Production Environment...'
-                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker pull jjtan1996/medika-app:%BUILD_NUMBER%'
                 bat 'docker rm -f medika-prod || true'
-                bat 'docker run -d --name medika-prod -p 8083:80 jjtan1996/medika-app:latest'
+                bat 'docker run -d --name medika-prod -p 8083:80 jjtan1996/medika-app:%BUILD_NUMBER%'
             }
         }
 
