@@ -41,7 +41,8 @@ pipeline {
         stage('Test') {
             steps {
                 // Run ESLint test
-                bat 'npm run lint'
+                bat 'npm install'
+                bat 'npm run test'
                 // Include additional steps for processing or archiving test results if necessary
             }
         }
@@ -51,6 +52,8 @@ pipeline {
 
     post {
         always {
+            archiveArtifacts artifacts: 'coverage/**/*', allowEmptyArchive: true
+            publishCoverage adapters: [cobertura('coverage/lcov.info')]
             cleanWs()
         }
         success {
