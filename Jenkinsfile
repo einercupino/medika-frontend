@@ -52,22 +52,6 @@ pipeline {
             }
         }
 
-        // Deployment Stages (CD)
-        stage('Deliver Artifact') {
-            steps {
-                script {
-                    // For a Node.js project, this might mean creating a production-ready build
-                    bat 'npm run build'
-
-                    // Next, package your build directory (e.g., 'dist') as a tarball or similar
-                    bat 'tar -cvf medika-app.tar dist/'
-
-                    // Archive the artifact on jenkins
-                    archiveArtifacts artifacts: 'medika-app.tar', onlyIfSuccessful: true
-                }
-            }
-        }
-
         stage('Docker Build') {
             steps {
                 script {
@@ -87,9 +71,6 @@ pipeline {
                 }
             }
         }
-
-
-        
 
         stage('Deploy to Dev Env') {
             steps {
