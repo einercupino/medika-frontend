@@ -1,4 +1,5 @@
-const expect = require('chai').expect;
+// Using ES6 import syntax
+import { expect } from 'chai';
 
 describe('Dummy Test', () => {
     it('should pass', () => {
