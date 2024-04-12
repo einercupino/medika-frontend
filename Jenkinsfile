@@ -32,10 +32,10 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo 'SonarQube Analysis code commented for now'
-                /*
+                
                 withSonarQubeEnv('server-sonar') { 
                     bat "${env.SCANNER_HOME}\\bin\\sonar-scanner"
-                }*/
+                }
             }
         }
 
