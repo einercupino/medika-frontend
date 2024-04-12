@@ -2,8 +2,12 @@ pipeline {
     agent any
 
     tools {
-        // Ensure that NodeJS is installed on Jenkins agents
-        nodejs 'node-20'
+        nodejs 'Node 20' // Correct the tool name as configured in Jenkins
+    }
+
+    environment {
+        // Define the scanner home environment variable here
+        SCANNER_HOME = tool 'sonar-scanner'
     }
 
     stages {
@@ -15,30 +19,30 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Installs the project dependencies from package.json
                 bat 'npm install'
             }
         }
 
         stage('Build') {
             steps {
-                // Runs the Vite build process
                 bat 'npm run build'
             }
         }
 
         stage('SonarQube Analysis') {
-                def scannerHome = tool 'sonar-scanner';
-                withSonarQubeEnv() {
-                bat "${scannerHome}/bin/sonar-scanner"
+            steps {
+                // Use the environment variable instead of 'def'
+                withSonarQubeEnv(SCANNER_HOME) { // Replace 'YourSonarQubeEnv' with the actual environment name configured in Jenkins
+                    bat "${env.SCANNER_HOME}\\bin\\sonar-scanner"
+                }
             }
         }
 
         stage('Test') {
             steps {
-                // run eslint test 
+                // Run ESLint test
                 bat 'npm run lint'
-             
+                // Include additional steps for processing or archiving test results if necessary
             }
         }
 
@@ -47,18 +51,13 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after build to save space
             cleanWs()
         }
         success {
-            // What to do if the build succeeds
             echo 'Build was successful!'
-            // Optionally send notifications or trigger other jobs
         }
         failure {
-            // What to do if the build fails
             echo 'Build failed!'
-            // Optionally send notifications or perform some recovery steps
         }
     }
 }
