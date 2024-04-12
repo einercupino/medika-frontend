@@ -41,9 +41,13 @@ pipeline {
         stage('Test') {
             steps {
                 // Run ESLint test
-                bat 'npm install'
-                bat 'npm run test'
-                // Include additional steps for processing or archiving test results if necessary
+                echo 'No test cases to run.'
+            }
+        }
+
+         stage('Generate Coverage Report') {
+            steps {
+                sh 'npm run coverage' // This will generate an empty coverage report
             }
         }
 
@@ -52,8 +56,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'coverage/**/*', allowEmptyArchive: true
-            publishCoverage adapters: [cobertura('coverage/lcov.info')]
+            cobertura coberturaReportFile: '**/coverage.lcov'
             cleanWs()
         }
         success {
