@@ -51,7 +51,39 @@ pipeline {
             }
         }
 
-        // Add Deployment Stages here
+        // Deployment Stages
+        stage('Deploy to Dev Env') {
+            steps {
+                echo 'Deploying to Development Environment...'
+                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker run -d --name my-app-dev -p 8080:80 jjtan1996/medika-app:latest'
+            }
+        }
+
+        stage('Deploy to QAT Env') {
+            steps {
+                echo 'Deploying to QAT Environment...'
+                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker run -d --name my-app-qat -p 8081:80 jjtan1996/medika-app:latest'
+            }
+        }
+
+        stage('Deploy to Staging Env') {
+            steps {
+                echo 'Deploying to Staging Environment...'
+                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker run -d --name my-app-staging -p 8082:80 jjtan1996/medika-app:latest'
+            }
+        }
+
+        stage('Deploy to Production Env') {
+            steps {
+                echo 'Deploying to Production Environment...'
+                bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker run -d --name my-app-prod -p 80:80 jjtan1996/medika-app:latest'
+            }
+        }
+
     }
 
     post {
