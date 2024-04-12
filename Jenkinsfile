@@ -31,8 +31,8 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // Use the environment variable instead of 'def'
-                withSonarQubeEnv('server-sonar') { // Replace 'YourSonarQubeEnv' with the actual environment name configured in Jenkins
+                
+                withSonarQubeEnv('server-sonar') { 
                     bat "${env.SCANNER_HOME}\\bin\\sonar-scanner"
                 }
             }
@@ -40,14 +40,13 @@ pipeline {
 
         stage('Test') {
             steps {
-                // Run ESLint test
                 echo 'No test cases to run.'
             }
         }
 
          stage('Generate Coverage Report') {
             steps {
-                sh 'npm run coverage' // This will generate an empty coverage report
+                bat 'npm run coverage' // This will generate an empty coverage report
             }
         }
 
