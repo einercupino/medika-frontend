@@ -32,7 +32,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // Use the environment variable instead of 'def'
-                withSonarQubeEnv(SCANNER_HOME) { // Replace 'YourSonarQubeEnv' with the actual environment name configured in Jenkins
+                withSonarQubeEnv('server-sonar') { // Replace 'YourSonarQubeEnv' with the actual environment name configured in Jenkins
                     bat "${env.SCANNER_HOME}\\bin\\sonar-scanner"
                 }
             }
