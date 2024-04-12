@@ -31,10 +31,11 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                
+                echo 'SonarQube Analysis code commented for now'
+                /*
                 withSonarQubeEnv('server-sonar') { 
                     bat "${env.SCANNER_HOME}\\bin\\sonar-scanner"
-                }
+                }*/
             }
         }
 
@@ -56,6 +57,7 @@ pipeline {
             steps {
                 echo 'Deploying to Development Environment...'
                 bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker rm -f medika-dev || true'
                 bat 'docker run -d --name medika-dev -p 8080:80 jjtan1996/medika-app:latest'
             }
         }
@@ -64,6 +66,7 @@ pipeline {
             steps {
                 echo 'Deploying to QAT Environment...'
                 bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker rm -f medika-qat || true'
                 bat 'docker run -d --name medika-qat -p 8081:80 jjtan1996/medika-app:latest'
             }
         }
@@ -72,6 +75,7 @@ pipeline {
             steps {
                 echo 'Deploying to Staging Environment...'
                 bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker rm -f medika-staging || true'
                 bat 'docker run -d --name medika-staging -p 8082:80 jjtan1996/medika-app:latest'
             }
         }
@@ -80,6 +84,7 @@ pipeline {
             steps {
                 echo 'Deploying to Production Environment...'
                 bat 'docker pull jjtan1996/medika-app:latest'
+                bat 'docker rm -f medika-prod || true'
                 bat 'docker run -d --name medika-prod -p 8083:80 jjtan1996/medika-app:latest'
             }
         }
