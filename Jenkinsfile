@@ -46,6 +46,7 @@ pipeline {
 
          stage('Generate Coverage Report') {
             steps {
+                bat 'if not exist .nyc_output mkdir .nyc_output'
                 bat 'npm run coverage' // This will generate an empty coverage report
             }
         }
