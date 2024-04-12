@@ -9,7 +9,7 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "nyc mocha",
-    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && nyc check-coverage"
+    "coverage": "nyc --reporter=cobertura --reporter=text npm test"
   },
   "dependencies": {
     "@apollo/client": "^3.9.9",

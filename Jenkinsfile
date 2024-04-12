@@ -56,7 +56,7 @@ pipeline {
 
     post {
         always {
-            cobertura coberturaReportFile: '**/coverage.lcov'
+            cobertura coberturaReportFile: 'coverage/cobertura-coverage.xml'
             cleanWs()
         }
         success {
