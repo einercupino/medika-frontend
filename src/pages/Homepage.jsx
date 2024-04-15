@@ -12,7 +12,7 @@ const Homepage = () => {
       <div className="flex flex-col items-center mb-8">
         <img src={medikaLogo} alt="Medika Logo" className="w-58 h-48" />
         <h1 className="text-5xl mt-4">Patient Tracking Application</h1>
-        <h1 className="text-5xl mt-4">Hello from DevOps CI/CD</h1>
+        <h1 className="text-5xl mt-4">Hello from DevOps CI/CD GitSCM</h1>
       </div>
 
       {/* Cards Container */}
